@@ -1,6 +1,6 @@
 from sha_1 import *
 from sha_256 import *
-import os
+import hashlib
 
 
 def menu():
