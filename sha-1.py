@@ -1,0 +1,91 @@
+import struct
+import binascii
+import hashlib
+
+
+def left_rotate(value, shift):
+    """Realizează o rotație circulară la stânga a valorii pe 32 de biți."""
+    return ((value << shift) & 0xFFFFFFFF) | (value >> (32 - shift))
+
+
+def sha1(message):
+    """Implementare a algoritmului SHA-1."""
+    # Pasul 1: Inițializăm variabilele hash H0, H1, H2, H3, H4
+    H0 = 0x67452301
+    H1 = 0xEFCDAB89
+    H2 = 0x98BADCFE
+    H3 = 0x10325476
+    H4 = 0xC3D2E1F0
+
+    # Pasul 2: Pre-procesare: adăugăm un bit '1', urmat de padding și lungimea originală
+    original_byte_len = len(message)
+    original_bit_len = original_byte_len * 8
+
+    # Adăugăm un bit '1'
+    message += b'\x80'
+
+    # Adăugăm padding cu zerouri până la 56 bytes (448 biți mod 512)
+    while (len(message) % 64) != 56:
+        message += b'\x00'
+
+    # Adăugăm lungimea originală a mesajului, pe 64 de biți
+    message += struct.pack('>Q', original_bit_len)
+
+    # Pasul 3: Procesăm mesajul în blocuri de 512 biți (64 bytes)
+    for i in range(0, len(message), 64):
+        chunk = message[i:i + 64]
+
+        # Divizăm chunk-ul în 16 cuvinte de 32 de biți fiecare
+        words = list(struct.unpack('>16I', chunk))
+
+        # Extindem lista la 80 de cuvinte (procesare specifică SHA-1)
+        for j in range(16, 80):
+            word = left_rotate(words[j - 3] ^ words[j - 8] ^ words[j - 14] ^ words[j - 16], 1)
+            words.append(word)
+
+        # Inițializăm variabilele temporare
+        a, b, c, d, e = H0, H1, H2, H3, H4
+
+        # Main loop: 80 de runde de procesare
+        for j in range(80):
+            if 0 <= j <= 19:
+                f = (b & c) | ((~b) & d)
+                k = 0x5A827999
+            elif 20 <= j <= 39:
+                f = b ^ c ^ d
+                k = 0x6ED9EBA1
+            elif 40 <= j <= 59:
+                f = (b & c) | (b & d) | (c & d)
+                k = 0x8F1BBCDC
+            else:
+                f = b ^ c ^ d
+                k = 0xCA62C1D6
+
+            temp = (left_rotate(a, 5) + f + e + k + words[j]) & 0xFFFFFFFF
+            e = d
+            d = c
+            c = left_rotate(b, 30)
+            b = a
+            a = temp
+
+        # Adăugăm valorile temporare la hash-urile inițiale
+        H0 = (H0 + a) & 0xFFFFFFFF
+        H1 = (H1 + b) & 0xFFFFFFFF
+        H2 = (H2 + c) & 0xFFFFFFFF
+        H3 = (H3 + d) & 0xFFFFFFFF
+        H4 = (H4 + e) & 0xFFFFFFFF
+
+    # Pasul 4: Concatenăm rezultatele pentru a obține hash-ul final
+    digest = struct.pack('>5I', H0, H1, H2, H3, H4)
+    return binascii.hexlify(digest).decode('utf-8')
+
+
+# Exemplu de utilizare
+if __name__ == "__main__":
+    mesaj = b"cosmo"
+    hash_rezultat = sha1(mesaj)
+    print(f"Hash-ul SHA-1 pentru mesajul '{mesaj.decode()}' este: {hash_rezultat}")
+
+    str = hashlib.sha1(b'cosmo')
+    str_hex = str.hexdigest()
+    print(str_hex)
