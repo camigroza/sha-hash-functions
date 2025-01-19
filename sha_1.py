@@ -1,6 +1,5 @@
 import struct
 import binascii
-import hashlib
 
 
 def left_rotate(value, shift):
@@ -79,13 +78,3 @@ def sha1(message):
     digest = struct.pack('>5I', H0, H1, H2, H3, H4)
     return binascii.hexlify(digest).decode('utf-8')
 
-
-# Exemplu de utilizare
-if __name__ == "__main__":
-    mesaj = b"cosmo"
-    hash_rezultat = sha1(mesaj)
-    print(f"Hash-ul SHA-1 pentru mesajul '{mesaj.decode()}' este: {hash_rezultat}")
-
-    str = hashlib.sha1(b'cosmo')
-    str_hex = str.hexdigest()
-    print(str_hex)

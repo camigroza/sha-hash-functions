@@ -90,14 +90,3 @@ def sha256(message):
     # Pasul 3: Concatenăm rezultatele pentru a obține hash-ul final
     digest = struct.pack('>8I', *H)
     return binascii.hexlify(digest).decode('utf-8')
-
-
-# Exemplu de utilizare
-if __name__ == "__main__":
-    mesaj = b"cosmo"
-    hash_rezultat = sha256(mesaj)
-    print(f"Hash-ul SHA-256 pentru mesajul '{mesaj.decode()}' este: {hash_rezultat}")
-
-    str = hashlib.sha256(b'cosmo')
-    str_hex = str.hexdigest()
-    print(str_hex)
