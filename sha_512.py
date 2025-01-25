@@ -1,8 +1,8 @@
 import struct
 import binascii
 
-# Funcția de rotire la dreapta pentru cuvinte de 64 de biți
-def right_rotate_64(value, shift):
+
+def right_rotate(value, shift):
     return ((value >> shift) | (value << (64 - shift))) & 0xFFFFFFFFFFFFFFFF
 
 def sha512(message):
@@ -59,11 +59,11 @@ def sha512(message):
 
         # Extindem lista la 80 de cuvinte
         for j in range(16, 80):
-            s0 = (right_rotate_64(words[j - 15], 1) ^
-                  right_rotate_64(words[j - 15], 8) ^
+            s0 = (right_rotate(words[j - 15], 1) ^
+                  right_rotate(words[j - 15], 8) ^
                   (words[j - 15] >> 7))
-            s1 = (right_rotate_64(words[j - 2], 19) ^
-                  right_rotate_64(words[j - 2], 61) ^
+            s1 = (right_rotate(words[j - 2], 19) ^
+                  right_rotate(words[j - 2], 61) ^
                   (words[j - 2] >> 6))
             words.append((words[j - 16] + s0 + words[j - 7] + s1) & 0xFFFFFFFFFFFFFFFF)
 
@@ -72,14 +72,14 @@ def sha512(message):
 
         # Main loop: 80 de runde de procesare
         for j in range(80):
-            S1 = (right_rotate_64(e, 14) ^
-                  right_rotate_64(e, 18) ^
-                  right_rotate_64(e, 41))
+            S1 = (right_rotate(e, 14) ^
+                  right_rotate(e, 18) ^
+                  right_rotate(e, 41))
             ch = (e & f) ^ ((~e) & g)
             temp1 = (h + S1 + ch + K[j] + words[j]) & 0xFFFFFFFFFFFFFFFF
-            S0 = (right_rotate_64(a, 28) ^
-                  right_rotate_64(a, 34) ^
-                  right_rotate_64(a, 39))
+            S0 = (right_rotate(a, 28) ^
+                  right_rotate(a, 34) ^
+                  right_rotate(a, 39))
             maj = (a & b) ^ (a & c) ^ (b & c)
             temp2 = (S0 + maj) & 0xFFFFFFFFFFFFFFFF
 
