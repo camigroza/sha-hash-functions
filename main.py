@@ -6,6 +6,7 @@ import hashlib
 
 def menu():
     msg = input("Insereaza textul: ")
+    print()
     msg_bytes = f'b"{msg}"'.encode()
 
     rezultat_sha1 = sha1(msg_bytes)
@@ -21,14 +22,14 @@ def menu():
     str_512 = hashlib.sha512(msg_bytes)
     str_hex_512 = str_512.hexdigest()
 
-    print(f"Hash-ul SHA-1 pentru mesajul '{msg}' este: {rezultat_sha1}")
-    print(f"Hash-ul SHA-1, folosind libraria hashlib, pentru mesajul '{msg}' este: {str_hex_1}\n")
+    print(f"Hash-ul SHA-1 este: {rezultat_sha1}")
+    print(f"Hash-ul SHA-1, folosind libraria hashlib, este: {str_hex_1}\n")
 
-    print(f"Hash-ul SHA-256 pentru mesajul '{msg}' este: {rezultat_sha256}")
-    print(f"Hash-ul SHA-256, folosind libraria hashlib, pentru mesajul '{msg}' este: {str_hex_256}\n")
+    print(f"Hash-ul SHA-256 este: {rezultat_sha256}")
+    print(f"Hash-ul SHA-256, folosind libraria hashlib, este: {str_hex_256}\n")
 
-    print(f"Hash-ul SHA-512 pentru mesajul '{msg}' este: {rezultat_sha512}")
-    print(f"Hash-ul SHA-512, folosind libraria hashlib, pentru mesajul '{msg}' este: {str_hex_512}\n")
+    print(f"Hash-ul SHA-512 este: {rezultat_sha512}")
+    print(f"Hash-ul SHA-512, folosind libraria hashlib, este: {str_hex_512}\n")
 
 
 if __name__ == "__main__":
