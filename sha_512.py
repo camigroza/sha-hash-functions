@@ -6,7 +6,7 @@ def right_rotate(value, shift):
     return ((value >> shift) | (value << (64 - shift))) & 0xFFFFFFFFFFFFFFFF
 
 def sha512(message):
-    # Constantele SHA-512 (primii 64 de biți ai părților fracționare ale rădăcinilor pătrate ale primelor 80 de numere prime)
+    # Constantele SHA-512 (primii 64 de biti ai partilor fractionare ale radacinilor patrate ale primelor 80 de numere prime)
     K = [
         0x428a2f98d728ae22, 0x7137449123ef65cd, 0xb5c0fbcfec4d3b2f, 0xe9b5dba58189dbbc,
         0x3956c25bf348b538, 0x59f111f1b605d019, 0x923f82a4af194f9b, 0xab1c5ed5da6d8118,
@@ -30,7 +30,7 @@ def sha512(message):
         0x4cc5d4becb3e42b6, 0x597f299cfc657e2a, 0x5fcb6fab3ad6faec, 0x6c44198c4a475817
     ]
 
-    # Valorile de inițializare pentru SHA-512 (primii 64 de biti ai radacinilor patrate ale primelor 8 numere prime)
+    # Valorile de initializare pentru SHA-512 (primii 64 de biti ai radacinilor patrate ale primelor 8 numere prime)
     H = [
         0x6a09e667f3bcc908, 0xbb67ae8584caa73b, 0x3c6ef372fe94f82b, 0xa54ff53a5f1d36f1,
         0x510e527fade682d1, 0x9b05688c2b3e6c1f, 0x1f83d9abfb41bd6b, 0x5be0cd19137e2179
@@ -39,22 +39,22 @@ def sha512(message):
     original_byte_len = len(message)
     original_bit_len = original_byte_len * 8
 
-    # Adăugăm un bit '1'
+    # Adaugam un bit '1'
     message += b'\x80'
 
-    # Adăugăm padding cu zerouri până la 112 bytes (896 biți)
+    # Adaugam padding cu zerouri pana la 112 bytes
     while (len(message) % 128) != 112:
         message += b'\x00'
 
-    # Adăugăm lungimea originală a mesajului, pe 128 de biți
-    message += struct.pack('>Q', 0)  # Primii 64 de biți (zero pentru mesaje sub 2^64 biți)
+    # Adaugam lungimea originala a mesajului, pe 128 de biti
+    message += struct.pack('>Q', 0)  # Primii 64 de biti (zero pentru mesaje sub 2^64 biti)
     message += struct.pack('>Q', original_bit_len)
 
-    # Procesăm mesajul în blocuri de 1024 biți (128 octeți)
+    # Procesam mesajul in blocuri de 1024 biti (128 bytes)
     for i in range(0, len(message), 128):
         chunk = message[i:i + 128]
 
-        # Împărțim chunk-ul în 16 cuvinte de 64 de biți fiecare
+        # Impărțim chunk-ul in 16 cuvinte de 64 de biti fiecare
         words = list(struct.unpack('>16Q', chunk))
 
         # Extindem lista la 80 de cuvinte
@@ -67,7 +67,7 @@ def sha512(message):
                   (words[j - 2] >> 6))
             words.append((words[j - 16] + s0 + words[j - 7] + s1) & 0xFFFFFFFFFFFFFFFF)
 
-        # Inițializăm variabilele temporare
+        # Initializam variabilele temporare
         a, b, c, d, e, f, g, h = H
 
         # Main loop: 80 de runde de procesare
@@ -92,7 +92,7 @@ def sha512(message):
             b = a
             a = (temp1 + temp2) & 0xFFFFFFFFFFFFFFFF
 
-        # Adăugăm valorile temporare la hash-urile inițiale
+        # Adaugam valorile temporare la hash-urile initiale
         H = [
             (H[0] + a) & 0xFFFFFFFFFFFFFFFF,
             (H[1] + b) & 0xFFFFFFFFFFFFFFFF,
@@ -104,6 +104,6 @@ def sha512(message):
             (H[7] + h) & 0xFFFFFFFFFFFFFFFF
         ]
 
-    # Concatenăm rezultatele pentru a obține hash-ul final
+    # Concatenam rezultatele pentru a obtine hash-ul final
     digest = struct.pack('>8Q', *H)
     return binascii.hexlify(digest).decode('utf-8')
