@@ -54,7 +54,7 @@ def sha512(message):
     for i in range(0, len(message), 128):
         chunk = message[i:i + 128]
 
-        # Impărțim chunk-ul in 16 cuvinte de 64 de biti fiecare
+        # Impartim chunk-ul in 16 cuvinte de 64 de biti fiecare
         words = list(struct.unpack('>16Q', chunk))
 
         # Extindem lista la 80 de cuvinte
